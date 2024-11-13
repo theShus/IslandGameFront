@@ -1,0 +1,15 @@
+<div class="rules-overlay">
+  <div class="rules-container" (click)="$event.stopPropagation()">
+    <h2 class="rules-title">Game Rules</h2>
+    <p class="rules-goal"><strong>Goal:</strong>The goal of the game is to find which island has the greatest average height.</p>
+    <h3 class="rules-heading">How to Play:</h3>
+    <ul class="rules-list">
+      <li>You are presented with a 30x30 grid map. Each cell represents either water (height = 0) or land (height > 0).</li>
+      <li>Connected  land cells form an island.</li>
+      <li>Click on any island to make a guess. You have 3 attempts to find the correct island.</li>
+      <li>After 3 wrong guesses or a successful guess, the game ends.</li>
+      <li>You will have helpers like the compass or different colored islands after your pick, don't forget to check your lives at the top left.</li>
+    </ul>
+    <button class="close-button" (click)="closePopupFun()">Close</button>
+  </div>
+</div>

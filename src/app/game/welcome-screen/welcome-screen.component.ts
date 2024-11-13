@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {GameService} from "../../../services/game.service";
 import {Router} from "@angular/router";
 
@@ -7,11 +7,18 @@ import {Router} from "@angular/router";
   templateUrl: './welcome-screen.component.html',
   styleUrls: ['./welcome-screen.component.css']
 })
-export class WelcomeScreenComponent {
+export class WelcomeScreenComponent implements OnInit{
 
-  constructor(private gameService: GameService, private router: Router) { }
+  showRules: boolean = false;
+
+  constructor(public gameService: GameService, private router: Router) { }
+
+  ngOnInit(): void {
+    this.checkServerConnection();
+  }
 
   startGame2D() {
+    if (this.gameService.serverStatus === "offline" || this.gameService.serverStatus === "loading") alert("Game server might be offline currently")
     this.gameService.getIslandData().subscribe({
       next: islandData => this.router.navigate(['/play2d']),
       error: (error) => {
@@ -21,6 +28,7 @@ export class WelcomeScreenComponent {
   }
 
   startGame3D() {
+    if (this.gameService.serverStatus === "offline" || this.gameService.serverStatus === "loading") alert("Game server might be offline currently")
     this.gameService.getIslandData().subscribe({
       next: islandData => this.router.navigate(['/play3d']),
       error: (error) => {
@@ -28,4 +36,16 @@ export class WelcomeScreenComponent {
       }
     });
   }
+
+  handleCloseRulesPopup(){
+    this.showRules = false
+  }
+
+
+  checkServerConnection() {
+    this.gameService.serverStatus = 'loading';
+    this.gameService.checkServerConnection()
+  }
+
+
 }

@@ -8,6 +8,7 @@ import {HttpClientModule} from "@angular/common/http";
 import { GameScreen2DComponent } from './game/game-screen-2-d/game-screen-2-d.component';
 import { GameScreen3DComponent } from './game/game-screen-3-d/game-screen-3-d.component';
 import { GameOverPopupComponent } from './game/game-over-popup/game-over-popup.component';
+import { RulesComponent } from './game/rules/rules.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { GameOverPopupComponent } from './game/game-over-popup/game-over-popup.c
     WelcomeScreenComponent,
     GameScreen2DComponent,
     GameScreen3DComponent,
-    GameOverPopupComponent
+    GameOverPopupComponent,
+    RulesComponent
   ],
   imports: [
     BrowserModule,

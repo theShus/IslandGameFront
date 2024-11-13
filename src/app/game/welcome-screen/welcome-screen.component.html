@@ -2,9 +2,23 @@
 <body>
 <div class="welcome-container">
   <div class="overlay">
+    <button class="check-server-button" (click)="checkServerConnection()">
+      Check Server:
+      <span
+        class="status-dot"
+        [ngClass]="{
+        'green-dot': gameService.serverStatus === 'online',
+        'red-dot': gameService.serverStatus === 'offline',
+        'loading-dot': gameService.serverStatus === 'loading'
+      }"
+      ></span>
+    </button>
     <h1>Welcome to the Island Game!</h1>
     <button class="play-button" (click)="startGame2D()">Play2D</button>
     <button class="play-button" (click)="startGame3D()">Play3D</button>
+    <button class="play-button" (click)="showRules = true">Rules</button>
   </div>
 </div>
+
+<app-rules *ngIf="showRules" (closePopup)="handleCloseRulesPopup()" [show]="showRules"></app-rules>
 </body>

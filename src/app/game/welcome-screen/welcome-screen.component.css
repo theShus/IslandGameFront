@@ -51,9 +51,74 @@
 }
 
 .play-button:hover {
-  transform: translateY(-5px); /* Move the button up slightly */
+  transform: translateY(-5px);
 }
 
 .play-button:active {
   transform: translateY(2px);
+}
+
+
+/* Position the button in the top-left corner */
+.check-server-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px 20px 10px 40px;
+  font-size: 1em;
+  width: 200px;
+  height: 50px;
+  color: #fff;
+  background-color: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Pirata One', cursive;
+  background-image: url('src/assets/woodButton.png');
+  background-size: cover;
+  background-position: center;
+  border: none;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.check-server-button:hover {
+  transform: translateY(-3px);
+}
+
+.check-server-button:active {
+  transform: translateY(2px);
+}
+
+.status-dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin-left: 10px;
+}
+
+.green-dot {
+  background-color: #32cd32; /* LimeGreen */
+}
+
+.red-dot {
+  background-color: #dc143c; /* Crimson */
+}
+
+.loading-dot {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #444444;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

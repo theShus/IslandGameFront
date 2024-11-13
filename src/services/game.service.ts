@@ -1,10 +1,11 @@
 // src/app/services/game.service.ts
 
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {BehaviorSubject, map, Observable, tap} from 'rxjs';
 import {CommandResponse, IslandData, Point} from "../models/models";
 import {environment} from "../environments/environment";
+import {materialLineGapSize} from "three/src/nodes/accessors/MaterialNode";
 
 @Injectable({
   providedIn: 'root',
@@ -14,15 +15,11 @@ export class GameService {
   private islandDataSubject = new BehaviorSubject<IslandData | null>(null);
   islandData$ = this.islandDataSubject.asObservable();
 
+  serverStatus: 'online' | 'offline' | 'loading' = 'loading';
+
   constructor(private http: HttpClient) {}
 
   getIslandData(): Observable<IslandData> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer your-token-here',
-      'Custom-Header': 'CustomHeaderValue'
-    });
-
     return this.http.get<CommandResponse<IslandData>>(environment.apiBaseUrl + environment.apiDataEndpoint).pipe(
       map((response) => this.processIslandData(response)),
       tap((data) => this.islandDataSubject.next(data)
@@ -46,4 +43,19 @@ export class GameService {
     };
   }
 
+  checkServerConnection(){
+    this.http.get<void>(environment.apiBaseUrl + environment.apiCheckEndpoint, { observe: 'response' }).subscribe(
+        (response: HttpResponse<void>) => {
+          if (response.status === 200) {
+            this.serverStatus = 'online';
+          } else {
+            this.serverStatus = 'offline';
+          }
+        },
+        (error) => {
+          this.serverStatus = 'offline';
+          console.error('Server connection failed:', error);
+        }
+      );
+  }
 }
