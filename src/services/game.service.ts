@@ -25,10 +25,8 @@ export class GameService {
 
     return this.http.get<CommandResponse<IslandData>>(environment.apiBaseUrl + environment.apiDataEndpoint).pipe(
       map((response) => this.processIslandData(response)),
-      tap((data) => {
-        this.islandDataSubject.next(data)
-        localStorage.setItem("islandData", JSON.stringify(data)) //in case the player refreshes the page, we can try to get the data back
-      })
+      tap((data) => this.islandDataSubject.next(data)
+      )
     );
   }
 
