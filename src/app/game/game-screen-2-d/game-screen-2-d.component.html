@@ -1,0 +1,58 @@
+<head></head>
+<body>
+
+<!-- Damage Display Overlay -->
+<div class="damage-overlay" *ngIf="showDamage"></div>
+
+<div class="game-container">
+  <h1>Island Game 2D</h1>
+
+  <div class="game-board-container">
+    <div class="lives-counter">Lives:
+      <span *ngFor="let life of playerLivesArr" [ngClass]="{ 'animated': isLivesAnimating }">☠</span>
+    </div>
+    <div class="game-board">
+      <div *ngFor="let row of islandData?.mapData; let i = index" class="row">
+        <div
+          *ngFor="let cell of row; let j = index"
+          class="cell"
+          [ngStyle]="{ 'background-color': cellColors[i][j] }"
+          (click)="onCellClick(i, j)"
+        ></div>
+      </div>
+    </div>
+
+    <!--  Altitude meter  -->
+    <div class="altitude-legend">
+      <div class="gradient-bar"></div>
+      <div class="height-labels">
+        <span>0m</span>
+        <span>200m</span>
+        <span>400m</span>
+        <span>600m</span>
+        <span>800m</span>
+        <span>1000m</span>
+      </div>
+    </div>
+
+    <!-- Compass and Arrow elements -->
+    <div class="compass-container" [ngClass]="{ 'animated': isCompassAnimating }">
+      <img src="assets/compas.png" alt="Compass" class="compass-image">
+      <div class="arrow-wrapper" [ngStyle]="{'transform': 'rotate(' + arrowAngle + 'deg)'}">
+        <div class="arrow-head"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- End Game Popup -->
+<app-game-over-popup
+  *ngIf="this.isGameOver"
+  [isVictory]="this.isVictory"
+  [playerLives]="this.playerLivesArr.length"
+  (restart)="handleRestart()"
+  (quit)="handleQuit()">
+</app-game-over-popup>
+
+</body>
+

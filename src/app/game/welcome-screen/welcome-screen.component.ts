@@ -11,13 +11,18 @@ export class WelcomeScreenComponent {
 
   constructor(private gameService: GameService, private router: Router) { }
 
-  startGame() {
+  startGame2D() {
     this.gameService.getIslandData().subscribe({
-      next: (islandData) => {
-        console.log("good data")
-        console.log(islandData)
-        this.router.navigate(['/play'])
-      },
+      next: islandData => this.router.navigate(['/play2d']),
+      error: (error) => {
+        console.error('Error fetching game data:', error);
+      }
+    });
+  }
+
+  startGame3D() {
+    this.gameService.getIslandData().subscribe({
+      next: islandData => this.router.navigate(['/play3d']),
       error: (error) => {
         console.error('Error fetching game data:', error);
       }

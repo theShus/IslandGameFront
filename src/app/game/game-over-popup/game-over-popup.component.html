@@ -1,0 +1,18 @@
+<div class="popup-overlay">
+  <div class="popup-content">
+    <div [ngClass]="{'banner-victory': isVictory, 'banner-loss': !isVictory}">
+      {{ isVictory ? 'VICTORY' : 'GAME OVER' }}
+    </div>
+    <div class="stars">
+      <ng-container *ngFor="let star of getStarsArray()">
+        <span [ngClass]="{'gold-star': star, 'gray-star': !star}">★</span>
+      </ng-container>
+    </div>
+    <p *ngIf="!isVictory">You've lost all your lives!</p>
+    <p *ngIf="isVictory">Congratulations! You've won!</p>
+    <div class="buttons">
+      <button (click)="quitGame()">Home</button>
+      <button (click)="restartGame()">Retry</button>
+    </div>
+  </div>
+</div>

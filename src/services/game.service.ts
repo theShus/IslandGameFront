@@ -3,7 +3,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {BehaviorSubject, map, Observable, tap} from 'rxjs';
-import {CommandResponse, IslandData} from "../models/models";
+import {CommandResponse, IslandData, Point} from "../models/models";
 import {environment} from "../environments/environment";
 
 @Injectable({
@@ -34,16 +34,17 @@ export class GameService {
 
   private processIslandData(response: CommandResponse<IslandData>): IslandData {
     if (!response.success) {
-      throw new Error(response.message || 'Failed to get island data');
+      alert(response.message || 'Failed to get island data');
     }
     const data = response.data;
 
     return {
       islandIds: data.islandIds,
-      islandAvgHeights: data.islandAvgHeights,
+      islandAvgHeights: new Map(Object.entries(data.islandAvgHeights).map(([key, value]) => [Number(key), value])),
       islandWithMaxAvgHeightId: data.islandWithMaxAvgHeightId,
-      islandCenterPoints: data.islandCenterPoints,
-      mapData: data.mapData, // Optional property
+      islandCenterPoints: new Map(Object.entries(data.islandCenterPoints).map(([key, value]) => [Number(key), value as Point])
+      ),
+      mapData: data.mapData,
     };
   }
 

@@ -1,0 +1,107 @@
+/* Popup Overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+/* Popup Content */
+.popup-content {
+  background-color: #f0d290;
+  padding: 20px;
+  border-radius: 20px;
+  text-align: center;
+  width: 350px;
+  position: relative;
+  border: 4px solid #a65e2e;
+}
+
+/* Banner */
+.banner-victory {
+  font-size: 2em;
+  color: #ffffff;
+  background-color: #d9534f; /* Red for victory */
+  padding: 10px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.banner-loss {
+  font-size: 2em;
+  color: #ffffff;
+  background-color: #387880; /* Blue for loss */
+  padding: 10px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* Stars */
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  font-size: 35px;
+}
+
+.gold-star {
+  font-size: 2em;
+  color: #ffd700; /* Gold for remaining lives */
+}
+
+.gray-star {
+  font-size: 2em;
+  color: #b0b0b0; /* Gray for missing lives */
+}
+
+/* Message */
+.popup-content p {
+  margin-bottom: 20px;
+  font-size: 1.1em;
+  color: #444;
+}
+
+/* Buttons */
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.buttons button {
+  background-color: #ffcc80;
+  color: #000;
+  padding: 10px 20px;
+  font-size: 1em;
+  border: 2px solid #b5651d;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.buttons button:hover {
+  transform: scale(1.1);
+}
+
+/* Victory/Loss Message */
+.popup-content p {
+  margin-bottom: 20px;
+  font-size: 1.3em;
+  color: #ffffff;
+  text-shadow:
+    -1px -1px 0 #4b2e1c,
+  1px -1px 0 #4b2e1c,
+  -1px 1px 0 #4b2e1c,
+  1px 1px 0 #4b2e1c;
+  background: none;
+  font-weight: bold;
+}

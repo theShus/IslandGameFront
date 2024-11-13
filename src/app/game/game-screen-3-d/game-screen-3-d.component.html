@@ -1,0 +1,27 @@
+<!--<head></head>-->
+<!--<body>-->
+
+<div style="display: flex">
+  <div class="game-container">
+    <h1>Island Game Board</h1>
+    <div class="game-board">
+      <div *ngFor="let row of islandData?.mapData; let i = index" class="row">
+        <div
+          *ngFor="let cell of row; let j = index"
+          class="cell"
+          [ngStyle]="{ 'background-color': getCellColor(cell) }"
+          (click)="onCellClick(i, j)"
+        ></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- game-screen.component.html -->
+
+  <div class="game-screen-container">
+    <!-- Renderer Container -->
+    <div #rendererContainer class="renderer-container"></div>
+  </div>
+
+</div>
+
