@@ -3,29 +3,33 @@ import {IslandData, Point} from "../../../models/models";
 import {GameService} from "../../../services/game.service";
 import {Router} from "@angular/router";
 import * as THREE from "three";
-import {round} from "three/src/nodes/math/MathNode";
 
 @Component({
   selector: 'app-game-screen-2-d',
   templateUrl: './game-screen-2-d.component.html',
   styleUrls: ['./game-screen-2-d.component.css']
 })
-export class GameScreen2DComponent implements OnInit{
+export class GameScreen2DComponent implements OnInit {
 
+  //game data
   islandData?: IslandData
 
-  showArrow: boolean = false
-  arrowAngle: number = 0
+  //game board
   cellColors: string[][] = []
   clickedIslands: number[] = []
 
+  //compass
+  arrowAngle: number = 0
+  isCompassAnimating = false;
+
+  //player lives
   playerLivesArr: number[] = []
   showDamage: boolean = false
+  isLivesAnimating = false;
+
+  //game state
   isGameOver: boolean = false
   isVictory: boolean = false
-
-  isLivesAnimating = false;
-  isCompassAnimating = false;
 
 
   constructor(private gameService: GameService, private router: Router) {
@@ -34,66 +38,41 @@ export class GameScreen2DComponent implements OnInit{
   /*
   If we got data we can play
   If the refresh happens try to load saved data
-  If there is an error with saved data try to get new data
-  Finally if all else fails go back to home
+  else go back to home
    */
   ngOnInit(): void {
     this.gameService.islandData$.subscribe((data) => {
       if (data) {
-        console.log("DATA RECEIVED")
-        console.log(data)
         this.islandData = data;
-
+        this.playerLivesArr = Array(3).fill(1);
         this.populateCellColors()
-      }
-      else {
-        console.log("SAVED DATA")
-        const storedData = localStorage.getItem("islandData")
-        if (false) {
-          //todo fix this
+        this.saveIslandData();
+      } else {
+        const loadedData = this.loadIslandData();
+        if (loadedData) {
+          this.islandData = loadedData;
+          this.populateCellColors()
 
-          // const parsedData = JSON.parse(storedData);
-          //
-          // this.islandData = {
-          //   islandIds: parsedData.islandIds,
-          //   islandAvgHeights: new Map(
-          //     Object.entries(parsedData.islandAvgHeights).map(([key, value]) => [Number(key), value as number])
-          //   ),
-          //   islandWithMaxAvgHeightId: parsedData.islandWithMaxAvgHeightId,
-          //   islandCenterPoints: new Map(
-          //     Object.entries(parsedData.islandCenterPoints).map(([key, value]) => [Number(key), value as Point])
-          //   ),
-          //   mapData: parsedData.mapData,
-          //   heightMap: parsedData.heightMap
-          // };
-        }
-        else {
-          console.log("NEW DATA!!!!!!!!!!!!!!!")
-          this.gameService.getIslandData().subscribe(
-            (fetchedData) => {
-              this.islandData = fetchedData
-              this.populateCellColors()
-
-            },
-            (error) => {this.router.navigate([''])}
-          )
+        } else {
+          this.router.navigate([''])
         }
       }
     });
-
-    this.playerLivesArr = Array(3).fill(1);
   }
 
-  populateCellColors(): void {
+  private populateCellColors(): void {
     this.cellColors = this.islandData!.mapData.map(row => row.map(height => this.getCellColor(height)));
+
+    // Apply grayOut after reload
+    this.clickedIslands.forEach(id => this.grayOutIsland(id));
   }
 
-  getCellColor(height: number): string {
+  private getCellColor(height: number): string {
     if (height === 0) return '#0000FF'; // water
-     else return this.heightToColor(height); //land
+    else return this.heightToColor(height); //land
   }
 
-  heightToColor(height: number): string {
+  private heightToColor(height: number): string {
     const water = 0;
     const grass = 200;
     const sand = 400;
@@ -101,54 +80,33 @@ export class GameScreen2DComponent implements OnInit{
     const snow = 800;
 
     if (height <= water) {
-      // Water: Blue
       return '#0000FF';
-    } else if (height > water && height <= grass) {
-      // Interpolate between Blue and Green
+    }
+    else if (height > water && height <= grass) {
       const t = height / grass;
       return this.interpolateColor('#0000FF', '#00FF00', t);
     }
     else if (height > grass && height <= sand) {
-      // Interpolate between Green and Yellow
       const t = (height - grass) / (sand - grass);
       return this.interpolateColor('#00FF00', '#FFFF00', t);
     }
     else if (height > sand && height <= rock) {
-      // Interpolate between Yellow and Brown
       const t = (height - sand) / (rock - sand);
       return this.interpolateColor('#FFFF00', '#8B4513', t);
     }
     else if (height > rock && height <= snow) {
-      // Interpolate between Brown and White
       const t = (height - rock) / (snow - rock);
       return this.interpolateColor('#8B4513', '#FFFFFF', t);
     }
     else {
-      // Default color (above snow)
-      return '#FFFFFF'; // White for high altitudes
+      return '#FFFFFF';
     }
   }
 
-  grayOutWrongIsland(islandId: number): void {
-    if (!this.islandData) {
-      console.warn('Island data is not available.');
-      return;
-    }
-
-    // Iterate through islandIds and gray out matching cells
-    this.islandData.islandIds.forEach((row, i) => {
-      row.forEach((id, j) => {
-        if (id === islandId) {
-          this.cellColors[i][j] = '#808080'; // Gray color
-        }
-      });
-    });
-  }
-
-  interpolateColor(color1: string, color2: string, t: number): string {
+  private interpolateColor(color1: string, color2: string, t: number): string {
     const c1 = new THREE.Color(color1);
     const c2 = new THREE.Color(color2);
-    c1.lerp(c2, t); // Interpolate based on t
+    c1.lerp(c2, t);
     return `rgb(${Math.round(c1.r * 255)}, ${Math.round(c1.g * 255)}, ${Math.round(c1.b * 255)})`;
   }
 
@@ -165,13 +123,29 @@ export class GameScreen2DComponent implements OnInit{
     if (this.clickedIslands.includes(clickedIslandId)) return
     this.clickedIslands.push(clickedIslandId)
 
-    this.grayOutWrongIsland(clickedIslandId)
+    this.grayOutIsland(clickedIslandId)
     this.reducePlayerLives()
     this.calculateCompassDirection(clickedIslandId)
+    this.saveIslandData();
   }
 
-  calculateCompassDirection(clickedIslandId: number): void{
-    // Retrieve the center points for both islands
+  private grayOutIsland(islandId: number): void {
+    if (!this.islandData) {
+      console.error('Island data is not available.');
+      return;
+    }
+
+    // Iterate through islandIds and gray out matching cells
+    this.islandData.islandIds.forEach((row, i) => {
+      row.forEach((id, j) => {
+        if (id === islandId) {
+          this.cellColors[i][j] = '#808080';
+        }
+      });
+    });
+  }
+
+  private calculateCompassDirection(clickedIslandId: number): void {
     const point1 = this.islandData?.islandCenterPoints.get(clickedIslandId);
     const point2 = this.islandData?.islandCenterPoints.get(this.islandData!.islandWithMaxAvgHeightId);
 
@@ -181,7 +155,7 @@ export class GameScreen2DComponent implements OnInit{
     // Calculate the angle in radians
     let angleRadians = Math.atan2(deltaY, deltaX);
     let angleDegrees = angleRadians * (180 / Math.PI);
-    angleDegrees += 90;
+    angleDegrees += 90; //it was off by 90 deg
 
     if (angleDegrees < 0) {
       angleDegrees += 360;
@@ -190,30 +164,30 @@ export class GameScreen2DComponent implements OnInit{
     this.triggerCompassAnimation()
   }
 
-  reducePlayerLives(){
+  private reducePlayerLives() {
     this.playerLivesArr.pop()
     this.showDamageDisplay()
     this.triggerLivesAnimation()
-    if (this.playerLivesArr.length == 0){
+    if (this.playerLivesArr.length == 0) {
       this.isGameOver = true
     }
   }
 
-  triggerLivesAnimation() {
+  private triggerLivesAnimation() {
     this.isLivesAnimating = true;
     setTimeout(() => {
       this.isLivesAnimating = false;
     }, 500);
   }
 
-  triggerCompassAnimation() {
+  private triggerCompassAnimation() {
     this.isCompassAnimating = true;
     setTimeout(() => {
       this.isCompassAnimating = false;
     }, 500);
   }
 
-  showDamageDisplay(): void {
+  private showDamageDisplay(): void {
     this.showDamage = true;
     setTimeout(() => {
       this.showDamage = false;
@@ -221,18 +195,74 @@ export class GameScreen2DComponent implements OnInit{
   }
 
 
-
   handleQuit() {
     this.router.navigate([''])
   }
 
   handleRestart() {
-    // this.isVictory = false
-    // this.isGameOver = false
-    // this.ngOnInit()
-    location.reload();
+    this.isVictory = false
+    this.isGameOver = false
+    this.clickedIslands = []
+    this.playerLivesArr = Array(3).fill(1)
+
+    this.gameService.getIslandData().subscribe(
+      (fetchedData) => {
+        this.islandData = fetchedData
+        this.populateCellColors()
+        this.saveIslandData()
+      },
+      (error) => {
+        this.router.navigate([''])
+      }
+    )
   }
 
+  private saveIslandData(): void {
+    if (!this.islandData) {
+      console.error("No IslandData to save.")
+      return;
+    }
 
-  protected readonly TimeRanges = TimeRanges;
+    const serializedData = {
+      ...this.islandData,
+      islandAvgHeights: Array.from(this.islandData.islandAvgHeights.entries()),
+      islandCenterPoints: Array.from(this.islandData.islandCenterPoints.entries()),
+      playerLives: this.playerLivesArr.length,
+      clickedIslands: this.clickedIslands,
+      arrowAngle: this.arrowAngle
+    };
+
+    try {
+      localStorage.setItem('islandData', JSON.stringify(serializedData));
+    } catch (error) {
+      console.error("Error saving IslandData to localStorage:", error);
+    }
+  }
+
+  private loadIslandData(): IslandData | null {
+    const jsonData = localStorage.getItem('islandData');
+    if (!jsonData) {
+      console.error("No IslandData found in localStorage.")
+      return null;
+    }
+
+    try {
+      const parsedData = JSON.parse(jsonData)
+      const reconstructedData: IslandData = {
+        islandIds: parsedData.islandIds,
+        islandAvgHeights: new Map<number, number>(parsedData.islandAvgHeights),
+        islandWithMaxAvgHeightId: parsedData.islandWithMaxAvgHeightId,
+        islandCenterPoints: new Map<number, Point>(parsedData.islandCenterPoints),
+        mapData: parsedData.mapData,
+      };
+      this.clickedIslands = parsedData.clickedIslands
+      this.playerLivesArr = Array(parsedData.playerLives).fill(1)
+      this.arrowAngle = parsedData.arrowAngle
+
+      return reconstructedData;
+    } catch (error) {
+      console.error("Error parsing IslandData from localStorage:", error)
+      return null
+    }
+  }
 }

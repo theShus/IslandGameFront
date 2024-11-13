@@ -1,27 +1,50 @@
-<!--<head></head>-->
-<!--<body>-->
+<head></head>
+<body>
 
-<div style="display: flex">
-  <div class="game-container">
-    <h1>Island Game Board</h1>
-    <div class="game-board">
-      <div *ngFor="let row of islandData?.mapData; let i = index" class="row">
-        <div
-          *ngFor="let cell of row; let j = index"
-          class="cell"
-          [ngStyle]="{ 'background-color': getCellColor(cell) }"
-          (click)="onCellClick(i, j)"
-        ></div>
+
+<!--Damage Display Overlay-->
+<div class="damage-overlay" *ngIf="showDamage"></div>
+
+<div class="game-container">
+  <h1>Island Game 3D</h1>
+  <div class="game-board-container">
+
+    <!--Lives-->
+    <div class="lives-counter">Lives:
+      <span *ngFor="let life of playerLivesArr" [ngClass]="{ 'animated': isLivesAnimating }">☠</span>
+    </div>
+
+    <!--Game board-->
+    <div class="game-screen-container">
+      <div #rendererContainer class="renderer-container"></div>
+    </div>
+
+    <!--Altitude legend-->
+    <div class="altitude-legend">
+      <div class="gradient-bar"></div>
+      <div class="height-labels">
+        <span>0m</span>
+        <span>200m</span>
+        <span>400m</span>
+        <span>600m</span>
+        <span>800m</span>
+        <span>1000m</span>
       </div>
     </div>
+
   </div>
-
-  <!-- game-screen.component.html -->
-
-  <div class="game-screen-container">
-    <!-- Renderer Container -->
-    <div #rendererContainer class="renderer-container"></div>
-  </div>
-
 </div>
+
+
+<!--End Game Popup-->
+<app-game-over-popup
+  *ngIf="this.isGameOver"
+  [isVictory]="this.isVictory"
+  [playerLives]="this.playerLivesArr.length"
+  (restart)="handleRestart()"
+  (quit)="handleQuit()">
+</app-game-over-popup>
+
+</body>
+
 

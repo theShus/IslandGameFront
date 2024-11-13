@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'app-game-over-popup',
@@ -23,8 +23,8 @@ export class GameOverPopupComponent {
 
   getStarsArray(): boolean[] {
     const maxLives = 3;
-    const starsArray = Array(this.playerLives).fill(true); // Lives remaining as gold stars
-    const grayArray = Array(maxLives - this.playerLives).fill(false); // Missing lives as gray stars
+    const starsArray = Array(this.playerLives).fill(true);
+    const grayArray = Array(maxLives - this.playerLives).fill(false);
     return [...starsArray, ...grayArray];
   }
 }

@@ -1,16 +1,20 @@
 <head></head>
 <body>
 
-<!-- Damage Display Overlay -->
+<!--Damage Display Overlay-->
 <div class="damage-overlay" *ngIf="showDamage"></div>
 
 <div class="game-container">
   <h1>Island Game 2D</h1>
 
   <div class="game-board-container">
+
+    <!--Lives-->
     <div class="lives-counter">Lives:
       <span *ngFor="let life of playerLivesArr" [ngClass]="{ 'animated': isLivesAnimating }">☠</span>
     </div>
+
+    <!--Game board-->
     <div class="game-board">
       <div *ngFor="let row of islandData?.mapData; let i = index" class="row">
         <div
@@ -22,7 +26,7 @@
       </div>
     </div>
 
-    <!--  Altitude meter  -->
+    <!--Altitude legend-->
     <div class="altitude-legend">
       <div class="gradient-bar"></div>
       <div class="height-labels">
@@ -35,7 +39,7 @@
       </div>
     </div>
 
-    <!-- Compass and Arrow elements -->
+    <!--Compass-->
     <div class="compass-container" [ngClass]="{ 'animated': isCompassAnimating }">
       <img src="assets/compas.png" alt="Compass" class="compass-image">
       <div class="arrow-wrapper" [ngStyle]="{'transform': 'rotate(' + arrowAngle + 'deg)'}">
@@ -45,7 +49,7 @@
   </div>
 </div>
 
-<!-- End Game Popup -->
+<!--End Game Popup-->
 <app-game-over-popup
   *ngIf="this.isGameOver"
   [isVictory]="this.isVictory"

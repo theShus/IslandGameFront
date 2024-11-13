@@ -9,7 +9,6 @@ export interface IslandData {
   islandWithMaxAvgHeightId: number;
   islandCenterPoints: Map<number, Point>;
   mapData: number[][];
-  // heightMap: number[][];
 }
 
 

@@ -1,35 +1,53 @@
-/*!* game-screen.component.css *!*/
+.game-screen-container {
+  width: 750px;
+  height: 750px;
+  position: relative;
+}
 
-/*.game-container {*/
-/*  text-align: center;*/
-/*}*/
+.renderer-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
 
-/*.game-board {*/
-/*  display: inline-block;*/
-/*  border: 2px solid #000;*/
-/*  margin-top: 20px;*/
-/*}*/
+body {
+  width: 100%;
+  min-height: 100vh;
 
-/*.row {*/
-/*  display: flex;*/
-/*}*/
+  /* New Background Styles */
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+  url('src/assets/backgroundIslands.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
 
-/*.cell {*/
-/*  width: 20px;*/
-/*  height: 20px;*/
-/*  box-sizing: border-box;*/
-/*  cursor: pointer;*/
-/*}*/
-
-/*.cell:hover {*/
-/*  outline: 1px solid #fff;*/
-/*}*/
+/*Game board*/
 
 .game-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+}
+
+.game-container h1 {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 3em;
+  background: linear-gradient(45deg, #FFD700, #FF8C00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.6),
+  0 0 20px rgba(255, 140, 0, 0.6),
+  0 0 30px rgba(255, 0, 0, 0.6);
+}
+
+.game-board-container {
+  position: relative;
+  display: inline-block;
 }
 
 .game-board {
@@ -41,24 +59,118 @@
   display: flex;
 }
 
-.cell {
-  width: 20px; /* Adjust size based on your preference */
-  height: 20px;
-  border: 1px solid #ccc; /* Optional: adds a border for visual clarity */
+
+/* Player Lives*/
+
+.lives-counter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: #ffffff;
+  font-size: 30px;
+  transition: transform 0.2s ease-in-out;
 }
 
-/* game-screen.component.css */
-
-.game-screen-container {
-  width: 1000px;
-  height: 1000px;
-  position: relative;
-  border: red 3px solid;
+.lives-counter span {
+  margin-right: 5px;
+  margin-left: 5px;
+  font-size: 40px;
 }
 
-.renderer-container {
+@keyframes scaleFlash {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Compass and lives animation */
+.animated {
+  animation: scaleFlash 0.5s ease-in-out;
+}
+
+/*Damage Overlay */
+
+.damage-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
-  position: relative;
+  pointer-events: none;
+  z-index: 1000;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 0, 0, 0) 60%,
+    rgba(255, 0, 0, 0.8) 100%
+  );
+  animation: flashRed 1s ease-in-out;
+}
+
+@keyframes flashRed {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Altitude Legend */
+
+.altitude-legend {
+  position: absolute;
+  top: 500px;
+  right: -167px;
+  display: flex;
+  align-items: flex-end;
+  margin: 20px;
+}
+
+.gradient-bar {
+  width: 30px;
+  height: 300px;
+  background: linear-gradient(
+    to top,
+    #0000FF 0%,
+    #00FF00 20%,
+    #FFFF00 40%,
+    #8B4513 60%,
+    #FFFFFF 100%
+  );
+  border: 1px solid #000;
+  border-radius: 5px;
+}
+
+.height-labels {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: space-between;
+  height: 300px;
+  margin-left: 10px;
+  font-size: 18px;
+  color: #ffffff;
 }
