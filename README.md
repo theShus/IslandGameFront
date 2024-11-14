@@ -1,27 +1,27 @@
-# NordeusChallangeFront
+Frontend - IslandGameFront
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.16.
+This frontend project is built with Angular and provides the user interface for the Island Game. Players can interact with a grid map to find the island with the highest average height.
+Project Overview
 
-## Development server
+The Island Game allows users to:
+    View a 30x30 grid map with water and land cells. Each cell has a height, and groups of connected land cells form islands.
+    Guess which island has the highest average height by clicking on any cell within the island.
+    Make up to three guesses to find the correct island, after which the game ends, allowing a restart.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+How to Play
+    Access the game by running it on http://localhost:80 if running from docker compose, and localhost:4200 if running in local.
+    Click on any cell in the grid map to select an island. The game will:
+        Highlight the selected island.
+        Compare its average height to the correct answer.
+        Track guesses, ending the game after three incorrect guesses or a correct guess.
+    After the game ends, click "Restart" to try again.
 
-## Code scaffolding
+Tech Stack
+    Angular: Manages dynamic UI, game logic, and user interactions.
+    REST API Calls: Communicates with the backend to receive map data and process guesses.
+    Docker: Deploys easily alongside the backend using the docker-compose.yml setup.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+![image](https://github.com/user-attachments/assets/cef02ca4-ee40-4f86-8a47-eccfcb1d36ab)
+![image](https://github.com/user-attachments/assets/bf3e0e96-ee08-4aea-8e8e-499779ec6ce1)
+![image](https://github.com/user-attachments/assets/2a164ef0-a3fd-49ba-b0d8-87decdcda354)
